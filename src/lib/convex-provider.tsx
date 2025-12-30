@@ -3,7 +3,10 @@ import { ConvexAuthProvider as ConvexAuthProviderBase } from '@convex-dev/auth/r
 import { ReactNode } from 'react'
 import { ConnectionError } from '../components/ConnectionError'
 
-const convexUrl = import.meta.env.VITE_CONVEX_URL
+const rawConvexUrl = import.meta.env.VITE_CONVEX_URL
+
+// Normalize the URL: remove trailing slashes and whitespace
+const convexUrl = rawConvexUrl ? rawConvexUrl.trim().replace(/\/+$/, '') : null
 
 let convex: ConvexReactClient | null = null
 let initializationError: Error | null = null
@@ -22,6 +25,12 @@ try {
     if (!convexUrl.startsWith('https://')) {
       console.warn('Convex URL should start with https://. Current value:', convexUrl)
     }
+    
+    // Warn if original URL had trailing slash (which we removed)
+    if (rawConvexUrl && rawConvexUrl !== convexUrl) {
+      console.warn('Removed trailing slash from Convex URL. Original:', rawConvexUrl, 'Normalized:', convexUrl)
+    }
+    
     convex = new ConvexReactClient(convexUrl)
   }
 } catch (error) {

@@ -97,7 +97,9 @@ If `VITE_CONVEX_URL` already exists in Vercel but you're still having connection
    - Should start with `https://`
    - Should end with `.convex.cloud`
    - No `http://` (must be HTTPS)
-   - No trailing `/`
+   - **No trailing `/`** (this causes WebSocket connection errors with double slashes)
+   - Example: `https://your-project.convex.cloud` ✅
+   - Wrong: `https://your-project.convex.cloud/` ❌
 
 ### Still Having Issues?
 
@@ -118,4 +120,9 @@ If `VITE_CONVEX_URL` already exists in Vercel but you're still having connection
 
 - **"Loading..." forever**
   → Usually means the environment variable is missing or incorrect
+
+- **"WebSocket connection to 'wss://...//api/...' failed"** (notice the double slash `//`)
+  → Your `VITE_CONVEX_URL` has a trailing slash. Remove it!
+  → Should be: `https://your-project.convex.cloud` (no trailing `/`)
+  → The code now automatically removes trailing slashes, but it's better to fix it in Vercel
 
