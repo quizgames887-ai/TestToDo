@@ -34,24 +34,40 @@ export function ConnectionError({ message, onRetry }: ConnectionErrorProps) {
           {convexUrl && (
             <div className="bg-yellow-50 border border-yellow-200 rounded p-4">
               <p className="font-medium text-yellow-900 mb-2">Configuration Found:</p>
-              <p className="text-yellow-700 break-all">
+              <p className="text-yellow-700 break-all mb-2">
                 <code className="bg-yellow-100 px-1 rounded text-xs">{convexUrl}</code>
               </p>
-              <p className="text-yellow-700 mt-2">
-                If you're still seeing this error, verify the URL is correct in your Convex dashboard.
-              </p>
+              <div className="text-yellow-700 text-xs space-y-2">
+                <p className="font-medium">If connection still fails, check:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>URL format is correct (starts with https://, ends with .convex.cloud)</li>
+                  <li>Convex backend is deployed (run <code className="bg-yellow-100 px-1 rounded">npm run convex:deploy</code>)</li>
+                  <li>You've redeployed Vercel after setting the variable</li>
+                  <li>Check browser console (F12) for specific error messages</li>
+                </ul>
+              </div>
             </div>
           )}
 
           <div className="bg-blue-50 border border-blue-200 rounded p-4">
             <p className="font-medium text-blue-900 mb-2">How to Fix:</p>
-            <ol className="list-decimal list-inside space-y-1 text-blue-700 text-xs">
-              <li>Go to your Vercel/Netlify project settings</li>
-              <li>Navigate to Environment Variables</li>
-              <li>Add <code className="bg-blue-100 px-1 rounded">VITE_CONVEX_URL</code></li>
-              <li>Set the value to your Convex deployment URL</li>
-              <li>Redeploy your application</li>
-            </ol>
+            {!convexUrl ? (
+              <ol className="list-decimal list-inside space-y-1 text-blue-700 text-xs">
+                <li>Go to your Vercel/Netlify project settings</li>
+                <li>Navigate to Environment Variables</li>
+                <li>Add <code className="bg-blue-100 px-1 rounded">VITE_CONVEX_URL</code></li>
+                <li>Set the value to your Convex deployment URL</li>
+                <li>Redeploy your application</li>
+              </ol>
+            ) : (
+              <ol className="list-decimal list-inside space-y-1 text-blue-700 text-xs">
+                <li>Verify the URL value in Vercel matches your Convex Production URL</li>
+                <li>Update the variable if the URL is incorrect</li>
+                <li>Redeploy your Vercel application (Deployments → ⋯ → Redeploy)</li>
+                <li>Check Convex Dashboard to ensure backend is deployed</li>
+                <li>Clear browser cache and hard refresh (Ctrl+Shift+R)</li>
+              </ol>
+            )}
           </div>
 
           {onRetry && (

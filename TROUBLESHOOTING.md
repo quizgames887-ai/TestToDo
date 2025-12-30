@@ -65,12 +65,48 @@ If you want to test locally:
    ```
 3. Restart your dev server: `npm run dev`
 
+### Variable Exists But Still Not Working?
+
+If `VITE_CONVEX_URL` already exists in Vercel but you're still having connection issues:
+
+1. **Verify the Value is Correct:**
+   - In Vercel, go to Settings → Environment Variables
+   - Click on `VITE_CONVEX_URL` to view/edit it
+   - Make sure it matches your Convex Production URL exactly
+   - Should be: `https://your-project-name.convex.cloud`
+   - No trailing slashes, no extra spaces
+
+2. **Update the Variable (if needed):**
+   - Click the variable to edit it
+   - Update the value with the correct Convex URL
+   - Make sure all environments (Production, Preview, Development) are selected
+   - Click Save
+
+3. **Redeploy After Updating:**
+   - Go to Deployments tab
+   - Click ⋯ on the latest deployment
+   - Click Redeploy
+   - Wait for deployment to complete
+
+4. **Check if Convex Backend is Deployed:**
+   - Run `npm run convex:deploy` locally
+   - Or check Convex Dashboard → Deployments
+   - Make sure your functions are deployed
+
+5. **Verify URL Format:**
+   - Should start with `https://`
+   - Should end with `.convex.cloud`
+   - No `http://` (must be HTTPS)
+   - No trailing `/`
+
 ### Still Having Issues?
 
 1. **Check the browser console** - Look for error messages
 2. **Verify Convex is deployed** - Run `npm run convex:deploy`
 3. **Check the Convex dashboard** - Make sure your functions are deployed
 4. **Verify the URL format** - Should start with `https://` and end with `.convex.cloud`
+5. **Clear browser cache** - Hard refresh (Ctrl+Shift+R or Cmd+Shift+R)
+6. **Check Network tab** - Look for failed requests to Convex
 
 ### Error Messages
 
