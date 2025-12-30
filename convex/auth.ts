@@ -18,19 +18,27 @@ export const { auth, signIn, signOut, store } = convexAuth({
       }
     ): Promise<Id<'users'>> => {
       try {
-        const userId = args.existingUserId
-        if (!userId) {
-          throw new Error('No existing user ID provided')
-        }
-
         // Get user info from profile
         const email = args.profile?.email as string | undefined
         const name = args.profile?.name as string | undefined
 
+        let userId = args.existingUserId
+
+        if (!userId) {
+          // If no existing user ID, create a new user
+          // This should rarely happen with Password provider, but handle it for safety
+          userId = await ctx.db.insert('users', {
+            email,
+            name,
+            createdAt: Date.now(),
+          })
+          return userId
+        }
+
         // Check if user record exists
         const existing = await ctx.db.get(userId)
         
-        if (existing && 'email' in existing) {
+        if (existing) {
           // Update user with email/name if provided and not already set
           const updates: { email?: string; name?: string; createdAt?: number } = {}
           if (email && !existing.email) updates.email = email
@@ -41,9 +49,15 @@ export const { auth, signIn, signOut, store } = convexAuth({
             await ctx.db.patch(userId, updates)
           }
         } else {
-          // User record should exist from auth, but if it doesn't, log a warning
-          // The createOrUpdate mutation called from frontend will handle this
-          console.warn('User record not found in createOrUpdateUser callback, userId:', userId)
+          // User record should exist from auth, but if it doesn't, insert it
+          // This is a fallback for edge cases
+          // Note: This will create a new user with a different ID, but that's the safest fallback
+          const newUserId = await ctx.db.insert('users', {
+            email,
+            name,
+            createdAt: Date.now(),
+          })
+          return newUserId
         }
         
         return userId
