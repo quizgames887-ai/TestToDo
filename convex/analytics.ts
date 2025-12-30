@@ -14,16 +14,16 @@ export const getCompletionRate = query({
     const days = args.days || 30
     const startDate = Date.now() - days * 24 * 60 * 60 * 1000
 
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) =>
-        q.and(
-          q.not(q.field('deletedAt')),
-          q.gte(q.field('createdAt'), startDate)
-        )
-      )
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter(
+      (task) => !task.deletedAt && task.createdAt >= startDate
+    )
 
     const total = tasks.length
     const completed = tasks.filter((t) => t.status === 'completed').length
@@ -51,16 +51,16 @@ export const getProductivityTrends = query({
     const days = args.days || 14
     const startDate = Date.now() - days * 24 * 60 * 60 * 1000
 
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) =>
-        q.and(
-          q.not(q.field('deletedAt')),
-          q.gte(q.field('createdAt'), startDate)
-        )
-      )
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter(
+      (task) => !task.deletedAt && task.createdAt >= startDate
+    )
 
     // Group by day
     const dailyStats: Record<string, { created: number; completed: number }> = {}
@@ -101,11 +101,14 @@ export const getStatsByPriority = query({
     const userId = await getAuthUserId(ctx)
     if (!userId) return []
 
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) => q.not(q.field('deletedAt')))
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter((task) => !task.deletedAt)
 
     const priorities = ['low', 'medium', 'high'] as const
     return priorities.map((priority) => {
@@ -134,11 +137,14 @@ export const getStatsByProject = query({
     const userId = await getAuthUserId(ctx)
     if (!userId) return []
 
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) => q.not(q.field('deletedAt')))
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter((task) => !task.deletedAt)
 
     const projects = await ctx.db
       .query('projects')
@@ -194,16 +200,16 @@ export const getOverdueStats = query({
     if (!userId) return null
 
     const now = Date.now()
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) =>
-        q.and(
-          q.not(q.field('deletedAt')),
-          q.eq(q.field('status'), 'pending')
-        )
-      )
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter(
+      (task) => !task.deletedAt && task.status === 'pending'
+    )
 
     const overdueTasks = tasks.filter((t) => t.dueDate && t.dueDate < now)
     const upcomingTasks = tasks.filter((t) => t.dueDate && t.dueDate >= now)
@@ -252,11 +258,14 @@ export const getWeeklySummary = query({
     const now = Date.now()
     const weekStart = now - 7 * 24 * 60 * 60 * 1000
 
-    const tasks = await ctx.db
+    // Get all tasks for user, then filter in JavaScript
+    const allTasks = await ctx.db
       .query('tasks')
       .withIndex('by_user', (q) => q.eq('userId', userId))
-      .filter((q) => q.not(q.field('deletedAt')))
       .collect()
+
+    // Filter in JavaScript to avoid index issues
+    const tasks = allTasks.filter((task) => !task.deletedAt)
 
     const thisWeekTasks = tasks.filter((t) => t.createdAt >= weekStart)
     const thisWeekCompleted = thisWeekTasks.filter((t) => t.status === 'completed')
