@@ -149,30 +149,34 @@ export function TaskDetail() {
   const isCompleted = task.status === 'completed'
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl w-full">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
         <button
           onClick={() => navigate('/')}
           className="btn btn-ghost"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </button>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           {hasChanges && (
             <button
               onClick={handleSave}
               disabled={isSaving}
-              className="btn btn-primary"
+              className="btn btn-primary flex-1 sm:flex-initial"
             >
               {isSaving ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Saving...
+                  <span className="hidden sm:inline">Saving...</span>
+                  <span className="sm:hidden">Saving</span>
                 </>
               ) : (
-                'Save Changes'
+                <>
+                  <span className="hidden sm:inline">Save Changes</span>
+                  <span className="sm:hidden">Save</span>
+                </>
               )}
             </button>
           )}
@@ -232,8 +236,8 @@ export function TaskDetail() {
         <hr className="border-surface-200" />
 
         {/* Due Date */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 w-32 text-surface-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:w-32 text-surface-600">
             <Calendar className="w-4 h-4" />
             <span className="text-sm font-sans">Due date</span>
           </div>
@@ -241,17 +245,17 @@ export function TaskDetail() {
             type="date"
             value={dueDate}
             onChange={(e) => handleFieldChange(setDueDate)(e.target.value)}
-            className="input py-2"
+            className="input py-2 flex-1"
           />
         </div>
 
         {/* Priority */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 w-32 text-surface-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:w-32 text-surface-600">
             <Flag className="w-4 h-4" />
             <span className="text-sm font-sans">Priority</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             {(['low', 'medium', 'high'] as const).map((p) => (
               <button
                 key={p}
@@ -274,15 +278,15 @@ export function TaskDetail() {
         </div>
 
         {/* Project */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 w-32 text-surface-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:w-32 text-surface-600">
             <Folder className="w-4 h-4" />
             <span className="text-sm font-sans">Project</span>
           </div>
           <select
             value={projectId || ''}
             onChange={(e) => handleFieldChange(setProjectId)(e.target.value as Id<'projects'> || undefined)}
-            className="input py-2"
+            className="input py-2 flex-1"
           >
             <option value="">No project</option>
             {projects?.map((p) => (
@@ -294,15 +298,15 @@ export function TaskDetail() {
         </div>
 
         {/* Category */}
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 w-32 text-surface-600">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:w-32 text-surface-600">
             <Tag className="w-4 h-4" />
             <span className="text-sm font-sans">Category</span>
           </div>
           <select
             value={categoryId || ''}
             onChange={(e) => handleFieldChange(setCategoryId)(e.target.value as Id<'categories'> || undefined)}
-            className="input py-2"
+            className="input py-2 flex-1"
           >
             <option value="">No category</option>
             {categories?.map((c) => (

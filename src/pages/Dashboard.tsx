@@ -30,10 +30,10 @@ export function Dashboard() {
   const isEmpty = !hasOverdue && !hasToday && !hasUpcoming && !hasCompleted
 
   return (
-    <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-medium text-surface-900 mb-2">Dashboard</h1>
-        <p className="text-surface-500 font-sans">
+    <div className="max-w-4xl w-full">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-serif font-medium text-surface-900 mb-2">Dashboard</h1>
+        <p className="text-sm sm:text-base text-surface-500 font-sans">
           {new Date().toLocaleDateString('en-US', {
             weekday: 'long',
             year: 'numeric',
@@ -56,7 +56,7 @@ export function Dashboard() {
           </p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-6 lg:space-y-8">
           {/* Overdue Tasks */}
           {hasOverdue && (
             <TaskSection

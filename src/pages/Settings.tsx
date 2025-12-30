@@ -82,27 +82,29 @@ export function Settings() {
   }
 
   return (
-    <div className="max-w-2xl">
-      <div className="flex items-center justify-between mb-8">
+    <div className="max-w-2xl w-full">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 lg:mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-medium text-surface-900 mb-2">Settings</h1>
-          <p className="text-surface-500 font-sans">Manage your preferences</p>
+          <h1 className="text-2xl sm:text-3xl font-serif font-medium text-surface-900 mb-2">Settings</h1>
+          <p className="text-sm sm:text-base text-surface-500 font-sans">Manage your preferences</p>
         </div>
         {hasChanges && (
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="btn btn-primary"
+            className="btn btn-primary w-full sm:w-auto"
           >
             {isSaving ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Saving...
+                <span className="hidden sm:inline">Saving...</span>
+                <span className="sm:hidden">Saving</span>
               </>
             ) : (
               <>
                 <Save className="w-4 h-4" />
-                Save Changes
+                <span className="hidden sm:inline">Save Changes</span>
+                <span className="sm:hidden">Save</span>
               </>
             )}
           </button>
@@ -237,7 +239,7 @@ export function Settings() {
 
           <div>
             <label className="input-label mb-3">Theme</label>
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               {([
                 { value: 'light', icon: Sun, label: 'Light' },
                 { value: 'dark', icon: Moon, label: 'Dark' },

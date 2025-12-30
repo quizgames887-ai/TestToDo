@@ -35,7 +35,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
     }
 
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
         {/* Backdrop */}
         <div
           className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -45,13 +45,13 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         {/* Modal */}
         <div
           ref={ref}
-          className={`relative bg-white rounded-2xl shadow-soft-lg w-full ${sizeStyles[size]} max-h-[90vh] overflow-hidden ${className}`}
+          className={`relative bg-white rounded-xl sm:rounded-2xl shadow-soft-lg w-full ${sizeStyles[size]} max-h-[90vh] overflow-hidden ${className}`}
           {...props}
         >
           {/* Header */}
           {title && (
-            <div className="flex items-center justify-between p-6 border-b border-surface-200">
-              <h2 className="text-xl font-serif font-medium text-surface-900">{title}</h2>
+            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-surface-200">
+              <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">{title}</h2>
               <button
                 onClick={onClose}
                 className="p-2 -mr-2 rounded-lg text-surface-400 hover:text-surface-600 hover:bg-surface-100 transition-colors"
@@ -77,7 +77,7 @@ interface ModalContentProps extends HTMLAttributes<HTMLDivElement> {}
 export const ModalContent = forwardRef<HTMLDivElement, ModalContentProps>(
   ({ className = '', children, ...props }, ref) => {
     return (
-      <div ref={ref} className={`p-6 ${className}`} {...props}>
+      <div ref={ref} className={`p-4 sm:p-6 ${className}`} {...props}>
         {children}
       </div>
     )
@@ -94,7 +94,7 @@ export const ModalFooter = forwardRef<HTMLDivElement, ModalFooterProps>(
     return (
       <div
         ref={ref}
-        className={`flex gap-3 p-6 pt-0 ${className}`}
+        className={`flex flex-col sm:flex-row gap-3 p-4 sm:p-6 pt-0 ${className}`}
         {...props}
       >
         {children}

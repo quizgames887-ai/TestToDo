@@ -71,23 +71,23 @@ export function Projects() {
   ]
 
   return (
-    <div className="max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-medium text-surface-900 mb-2">
+    <div className="max-w-4xl w-full">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-serif font-medium text-surface-900 mb-2">
           Organization
         </h1>
-        <p className="text-surface-500 font-sans">
+        <p className="text-sm sm:text-base text-surface-500 font-sans">
           Manage your projects, categories, and tags
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-6 lg:mb-8 overflow-x-auto pb-2 scrollbar-thin">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-sans text-sm font-medium transition-colors ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-sans text-sm font-medium transition-colors whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-primary-100 text-primary-700'
                 : 'text-surface-600 hover:bg-surface-100'
@@ -102,16 +102,17 @@ export function Projects() {
       {/* Projects Tab */}
       {activeTab === 'projects' && (
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-serif font-medium text-surface-900">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">
               Projects ({projects?.length || 0})
             </h2>
             <button
               onClick={() => setIsProjectModalOpen(true)}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
-              New Project
+              <span className="hidden sm:inline">New Project</span>
+              <span className="sm:hidden">New</span>
             </button>
           </div>
 
@@ -149,16 +150,17 @@ export function Projects() {
       {/* Categories Tab */}
       {activeTab === 'categories' && (
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-serif font-medium text-surface-900">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">
               Categories ({categories?.length || 0})
             </h2>
             <button
               onClick={() => setIsCategoryModalOpen(true)}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
-              New Category
+              <span className="hidden sm:inline">New Category</span>
+              <span className="sm:hidden">New</span>
             </button>
           </div>
 
@@ -196,16 +198,17 @@ export function Projects() {
       {/* Tags Tab */}
       {activeTab === 'tags' && (
         <div>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-serif font-medium text-surface-900">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+            <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">
               Tags ({tags?.length || 0})
             </h2>
             <button
               onClick={() => setIsTagModalOpen(true)}
-              className="btn btn-primary"
+              className="btn btn-primary w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
-              New Tag
+              <span className="hidden sm:inline">New Tag</span>
+              <span className="sm:hidden">New</span>
             </button>
           </div>
 
@@ -283,24 +286,24 @@ function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
     : 0
 
   return (
-    <div className="card card-hover flex items-center gap-4">
+    <div className="card card-hover flex items-center gap-3 sm:gap-4">
       <div
-        className="w-3 h-12 rounded-full flex-shrink-0"
+        className="w-3 h-12 rounded-full flex-shrink-0 hidden sm:block"
         style={{ backgroundColor: project.color || '#8f7559' }}
       />
       <div className="flex-1 min-w-0">
-        <h3 className="font-medium text-surface-900">{project.name}</h3>
+        <h3 className="font-medium text-sm sm:text-base text-surface-900">{project.name}</h3>
         {project.description && (
-          <p className="text-sm text-surface-500 line-clamp-1">
+          <p className="text-xs sm:text-sm text-surface-500 line-clamp-1">
             {project.description}
           </p>
         )}
-        <div className="flex items-center gap-4 mt-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2">
           <span className="text-xs text-surface-500 font-sans">
             {project.pendingCount} pending · {project.completedCount} completed
           </span>
           {project.taskCount > 0 && (
-            <div className="flex-1 max-w-[100px] h-1.5 bg-surface-200 rounded-full overflow-hidden">
+            <div className="flex-1 sm:max-w-[100px] h-1.5 bg-surface-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-500 rounded-full transition-all"
                 style={{ width: `${progress}%` }}
@@ -309,7 +312,7 @@ function ProjectCard({ project, onEdit, onDelete }: ProjectCardProps) {
           )}
         </div>
       </div>
-      <div className="relative">
+      <div className="relative flex-shrink-0">
         <button
           onClick={() => setShowMenu(!showMenu)}
           className="btn btn-ghost p-2"

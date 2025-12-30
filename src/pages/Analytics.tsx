@@ -46,10 +46,10 @@ export function Analytics() {
   }
 
   return (
-    <div className="max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-serif font-medium text-surface-900 mb-2">Analytics</h1>
-        <p className="text-surface-500 font-sans">
+    <div className="max-w-6xl w-full">
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-serif font-medium text-surface-900 mb-2">Analytics</h1>
+        <p className="text-sm sm:text-base text-surface-500 font-sans">
           Track your productivity and task completion
         </p>
       </div>

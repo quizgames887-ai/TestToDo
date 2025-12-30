@@ -105,10 +105,10 @@ export function TaskModal({ isOpen, onClose, taskId }: TaskModalProps) {
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-2xl shadow-soft-lg w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-soft-lg w-full max-w-lg mx-3 sm:mx-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-surface-200">
-          <h2 className="text-xl font-serif font-medium text-surface-900">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-surface-200">
+          <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">
             {taskId ? 'Edit Task' : 'New Task'}
           </h2>
           <button
@@ -120,7 +120,7 @@ export function TaskModal({ isOpen, onClose, taskId }: TaskModalProps) {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5">
           {/* Title */}
           <div>
             <label htmlFor="title" className="input-label">
@@ -253,7 +253,7 @@ export function TaskModal({ isOpen, onClose, taskId }: TaskModalProps) {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-4">
+          <div className="flex flex-col sm:flex-row gap-3 pt-4">
             <button
               type="button"
               onClick={onClose}
@@ -269,12 +269,19 @@ export function TaskModal({ isOpen, onClose, taskId }: TaskModalProps) {
               {isLoading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Saving...
+                  <span className="hidden sm:inline">Saving...</span>
+                  <span className="sm:hidden">Saving</span>
                 </>
               ) : taskId ? (
-                'Update Task'
+                <>
+                  <span className="hidden sm:inline">Update Task</span>
+                  <span className="sm:hidden">Update</span>
+                </>
               ) : (
-                'Create Task'
+                <>
+                  <span className="hidden sm:inline">Create Task</span>
+                  <span className="sm:hidden">Create</span>
+                </>
               )}
             </button>
           </div>

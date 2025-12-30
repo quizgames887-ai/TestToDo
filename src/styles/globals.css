@@ -69,10 +69,16 @@
 
   body {
     @apply bg-surface-50 text-surface-900;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.6;
     height: 100%;
     margin: 0;
+  }
+
+  @media (min-width: 640px) {
+    body {
+      font-size: 18px;
+    }
   }
 
   #root {
@@ -210,12 +216,18 @@
   /* Sidebar */
   .sidebar {
     @apply w-64 bg-white border-r border-surface-200 h-screen fixed left-0 top-0;
-    @apply flex flex-col;
+    @apply flex flex-col z-50;
+    @apply -translate-x-full lg:translate-x-0 transition-transform duration-300;
+  }
+
+  .sidebar-open {
+    @apply translate-x-0;
   }
 
   /* Main content area */
   .main-content {
-    @apply ml-64 min-h-screen p-8;
+    @apply min-h-screen p-4 sm:p-6 lg:p-8;
+    @apply lg:ml-64;
   }
 
   /* Task item */

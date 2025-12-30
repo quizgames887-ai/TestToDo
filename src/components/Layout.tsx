@@ -8,6 +8,8 @@ import {
   LogOut,
   Plus,
   Bell,
+  Menu,
+  X,
 } from 'lucide-react'
 import { SearchBar } from './SearchBar'
 import { useState } from 'react'
@@ -16,6 +18,7 @@ import { TaskModal } from './TaskModal'
 export function Layout() {
   const { user, signOut } = useAuth()
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const handleSignOut = async () => {
     await signOut()
@@ -28,23 +31,49 @@ export function Layout() {
     { to: '/settings', icon: Settings, label: 'Settings' },
   ]
 
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
     <div className="min-h-screen bg-surface-50">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="sidebar">
-        <div className="p-6 border-b border-surface-200">
-          <h1 className="text-2xl font-serif font-medium text-surface-900">TaskFlow</h1>
-          <p className="text-xs text-surface-500 font-sans mt-1">AI Task Management</p>
+      <aside className={`sidebar ${isMobileMenuOpen ? 'sidebar-open' : ''}`}>
+        <div className="p-4 lg:p-6 border-b border-surface-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-xl lg:text-2xl font-serif font-medium text-surface-900">TaskFlow</h1>
+              <p className="text-xs text-surface-500 font-sans mt-1">AI Task Management</p>
+            </div>
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden btn btn-ghost p-2"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Quick Add Button */}
         <div className="p-4">
           <button
-            onClick={() => setIsTaskModalOpen(true)}
+            onClick={() => {
+              setIsTaskModalOpen(true)
+              setIsMobileMenuOpen(false)
+            }}
             className="btn btn-primary w-full justify-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            New Task
+            <span className="hidden sm:inline">New Task</span>
+            <span className="sm:hidden">New</span>
           </button>
         </div>
 
@@ -55,6 +84,7 @@ export function Layout() {
               <li key={item.to}>
                 <NavLink
                   to={item.to}
+                  onClick={handleNavClick}
                   className={({ isActive }) =>
                     `nav-link font-sans text-sm ${isActive ? 'nav-link-active' : ''}`
                   }
@@ -70,7 +100,7 @@ export function Layout() {
         {/* User Section */}
         <div className="p-4 border-t border-surface-200">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center flex-shrink-0">
               <span className="text-primary-700 font-medium font-sans">
                 {user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
               </span>
@@ -97,8 +127,16 @@ export function Layout() {
       {/* Main Content */}
       <main className="main-content">
         {/* Top Bar */}
-        <header className="flex items-center justify-between mb-8">
-          <SearchBar />
+        <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 lg:mb-8">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <button
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden btn btn-ghost p-2"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <SearchBar />
+          </div>
           <div className="flex items-center gap-4">
             <button className="btn btn-ghost p-2 relative">
               <Bell className="w-5 h-5" />

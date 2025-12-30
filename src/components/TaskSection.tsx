@@ -33,15 +33,15 @@ export function TaskSection({
     <section className={variantStyles[variant]}>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="flex items-center gap-3 mb-4 group w-full text-left"
+        className="flex items-center gap-2 sm:gap-3 mb-4 group w-full text-left"
       >
         {isCollapsed ? (
-          <ChevronRight className="w-4 h-4 text-surface-400 group-hover:text-surface-600" />
+          <ChevronRight className="w-4 h-4 text-surface-400 group-hover:text-surface-600 flex-shrink-0" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-surface-400 group-hover:text-surface-600" />
+          <ChevronDown className="w-4 h-4 text-surface-400 group-hover:text-surface-600 flex-shrink-0" />
         )}
-        {icon}
-        <h2 className="text-xl font-serif font-medium text-surface-900">{title}</h2>
+        <span className="flex-shrink-0">{icon}</span>
+        <h2 className="text-lg sm:text-xl font-serif font-medium text-surface-900">{title}</h2>
         <span className="text-sm text-surface-500 font-sans">
           ({tasks.length})
         </span>
@@ -50,11 +50,11 @@ export function TaskSection({
       {!isCollapsed && (
         <>
           {tasks.length === 0 ? (
-            <p className="text-surface-500 font-sans text-sm pl-7">
+            <p className="text-surface-500 font-sans text-sm pl-6 sm:pl-7">
               {emptyMessage || 'No tasks'}
             </p>
           ) : (
-            <div className="space-y-3 pl-7">
+            <div className="space-y-3 pl-6 sm:pl-7">
               {tasks.map((task) => (
                 <TaskCard key={task._id} task={task} />
               ))}

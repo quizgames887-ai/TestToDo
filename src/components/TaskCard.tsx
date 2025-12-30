@@ -81,7 +81,7 @@ export function TaskCard({ task }: TaskCardProps) {
 
       {/* Content */}
       <div className="flex-1 min-w-0">
-        <div className="flex items-start gap-3">
+        <div className="flex items-start gap-2 sm:gap-3">
           {/* Priority dot */}
           <div
             className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
@@ -91,7 +91,7 @@ export function TaskCard({ task }: TaskCardProps) {
           
           <div className="flex-1 min-w-0">
             <h3
-              className={`font-medium text-surface-900 ${
+              className={`font-medium text-sm sm:text-base text-surface-900 ${
                 isCompleted ? 'line-through text-surface-500' : ''
               }`}
             >
@@ -99,13 +99,13 @@ export function TaskCard({ task }: TaskCardProps) {
             </h3>
             
             {task.description && (
-              <p className="text-sm text-surface-500 line-clamp-2 mt-1">
+              <p className="text-xs sm:text-sm text-surface-500 line-clamp-2 mt-1">
                 {task.description}
               </p>
             )}
 
             {/* Meta */}
-            <div className="flex items-center gap-4 mt-2">
+            <div className="flex items-center gap-2 sm:gap-4 mt-2">
               {task.dueDate && (
                 <span
                   className={`flex items-center gap-1.5 text-xs font-sans ${
@@ -130,7 +130,7 @@ export function TaskCard({ task }: TaskCardProps) {
             e.stopPropagation()
             setShowMenu(!showMenu)
           }}
-          className="btn btn-ghost p-2 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="btn btn-ghost p-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
         >
           <MoreHorizontal className="w-4 h-4" />
         </button>

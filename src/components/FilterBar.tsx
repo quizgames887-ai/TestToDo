@@ -54,7 +54,7 @@ export function FilterBar({ filters, onFilterChange }: FilterBarProps) {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-          <div className="absolute left-0 top-full mt-2 bg-white rounded-xl shadow-soft-lg border border-surface-200 p-4 z-20 min-w-[280px]">
+          <div className="absolute left-0 right-0 sm:left-auto sm:right-0 top-full mt-2 bg-white rounded-xl shadow-soft-lg border border-surface-200 p-4 z-20 min-w-[280px] max-w-[90vw] sm:max-w-none">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-medium text-surface-900 font-sans text-sm">Filters</h3>
               {hasFilters && (
