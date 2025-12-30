@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth'
 import { Mail, Lock, User, ArrowRight, CheckCircle } from 'lucide-react'
 
 export function Register() {
-  const { signUp, isAuthenticated, isLoading: authLoading } = useAuth()
+  const { signUp, isAuthenticated, isLoading: authLoading, user } = useAuth()
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -13,19 +13,23 @@ export function Register() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated and user data is loaded
   useEffect(() => {
-    if (isAuthenticated && !authLoading) {
+    if (isAuthenticated && !authLoading && user !== undefined) {
       navigate('/', { replace: true })
     }
-  }, [isAuthenticated, authLoading, navigate])
+  }, [isAuthenticated, authLoading, user, navigate])
 
   // Clear loading state when authentication completes (success or failure)
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      setIsLoading(false)
+    if (!authLoading) {
+      if (isAuthenticated && user) {
+        setIsLoading(false)
+      } else if (!isAuthenticated) {
+        setIsLoading(false)
+      }
     }
-  }, [authLoading, isAuthenticated])
+  }, [authLoading, isAuthenticated, user])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

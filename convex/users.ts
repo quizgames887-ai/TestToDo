@@ -57,15 +57,21 @@ export const createOrUpdate = mutation({
         createdAt: existing.createdAt ?? Date.now(),
       })
     } else {
-      // User should exist from auth, but if it doesn't, create it
-      // Note: This shouldn't happen in normal flow, but handle it just in case
-      await ctx.db.insert('users', {
-        email: args.email,
-        name: args.name,
-        createdAt: Date.now(),
-      })
-      // Note: The inserted user will have a different ID than userId
-      // This is a fallback, but the auth callback should handle this
+      // User should exist from auth callback
+      // If it doesn't exist, the auth callback should have created it
+      // This mutation is only called as a backup, so if user doesn't exist, 
+      // we'll create it with replace (which will fail if doc truly doesn't exist)
+      // In that case, we'll throw an error
+      try {
+        await ctx.db.replace(userId, {
+          email: args.email,
+          name: args.name,
+          createdAt: Date.now(),
+        })
+      } catch (error) {
+        // User doesn't exist - this shouldn't happen if auth callback worked
+        throw new Error('User record not found. Please sign in again.')
+      }
     }
 
     return await ctx.db.get(userId)

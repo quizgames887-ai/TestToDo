@@ -22,18 +22,13 @@ export const { auth, signIn, signOut, store } = convexAuth({
         const email = args.profile?.email as string | undefined
         const name = args.profile?.name as string | undefined
 
-        let userId = args.existingUserId
-
-        if (!userId) {
-          // If no existing user ID, create a new user
-          // This should rarely happen with Password provider, but handle it for safety
-          userId = await ctx.db.insert('users', {
-            email,
-            name,
-            createdAt: Date.now(),
-          })
-          return userId
+        // With Password provider, existingUserId should always be provided
+        // The auth system creates the user record before calling this callback
+        if (!args.existingUserId) {
+          throw new Error('existingUserId is required for Password provider')
         }
+
+        const userId = args.existingUserId
 
         // Check if user record exists
         const existing = await ctx.db.get(userId)
@@ -49,15 +44,37 @@ export const { auth, signIn, signOut, store } = convexAuth({
             await ctx.db.patch(userId, updates)
           }
         } else {
-          // User record should exist from auth, but if it doesn't, insert it
-          // This is a fallback for edge cases
-          // Note: This will create a new user with a different ID, but that's the safest fallback
-          const newUserId = await ctx.db.insert('users', {
-            email,
-            name,
-            createdAt: Date.now(),
-          })
-          return newUserId
+          // User record should exist from auth system
+          // Sometimes there's a race condition, so we'll wait a bit and check again
+          await new Promise(resolve => setTimeout(resolve, 100))
+          const retryCheck = await ctx.db.get(userId)
+          
+          if (retryCheck) {
+            // User exists now, update it
+            const updates: { email?: string; name?: string; createdAt?: number } = {}
+            if (email && !retryCheck.email) updates.email = email
+            if (name && !retryCheck.name) updates.name = name
+            if (!retryCheck.createdAt) updates.createdAt = Date.now()
+            
+            if (Object.keys(updates).length > 0) {
+              await ctx.db.patch(userId, updates)
+            }
+          } else {
+            // User still doesn't exist - this shouldn't happen with Password provider
+            // Try to create it with replace (will fail if doc truly doesn't exist)
+            try {
+              await ctx.db.replace(userId, {
+                email: email || '',
+                name: name,
+                createdAt: Date.now(),
+              })
+            } catch (replaceError) {
+              // If replace fails, the document truly doesn't exist
+              // This is a serious issue - log it and throw an error
+              console.error('User record missing for userId:', userId, 'Auth system may not have created the user')
+              throw new Error('Failed to create user record. Please try signing up again.')
+            }
+          }
         }
         
         return userId
