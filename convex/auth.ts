@@ -1,25 +1,36 @@
 import { convexAuth } from '@convex-dev/auth/server'
 import { Password } from '@convex-dev/auth/providers/Password'
 import { DataModel } from './_generated/dataModel'
+import { GenericMutationCtx } from 'convex/server'
+import { Id } from './_generated/dataModel'
 
 export const { auth, signIn, signOut, store } = convexAuth({
   providers: [Password<DataModel>()],
   callbacks: {
-    afterAuth: async (ctx, args) => {
+    createOrUpdateUser: async (
+      ctx: GenericMutationCtx<DataModel>,
+      args: {
+        existingUserId: Id<'users'> | null
+        type: 'email' | 'credentials' | 'oauth' | 'phone' | 'verification'
+        provider: unknown
+        profile: Record<string, unknown> & { email?: string; name?: string; image?: string }
+        shouldLink?: boolean
+      }
+    ): Promise<Id<'users'>> => {
       try {
-        const userId = args.userId
-        if (!userId) return
+        const userId = args.existingUserId
+        if (!userId) {
+          throw new Error('No existing user ID provided')
+        }
 
-        // Get user info from provider data
-        // The Password provider passes email and name in the signIn call
-        const providerData = args.providerData as Record<string, unknown> | undefined
-        const email = providerData?.email as string | undefined
-        const name = providerData?.name as string | undefined
+        // Get user info from profile
+        const email = args.profile?.email as string | undefined
+        const name = args.profile?.name as string | undefined
 
-        // Check if user record exists (it should, created by auth system)
+        // Check if user record exists
         const existing = await ctx.db.get(userId)
         
-        if (existing) {
+        if (existing && 'email' in existing) {
           // Update user with email/name if provided and not already set
           const updates: { email?: string; name?: string; createdAt?: number } = {}
           if (email && !existing.email) updates.email = email
@@ -30,13 +41,16 @@ export const { auth, signIn, signOut, store } = convexAuth({
             await ctx.db.patch(userId, updates)
           }
         } else {
-          // User record should exist, but if it doesn't, log a warning
+          // User record should exist from auth, but if it doesn't, log a warning
           // The createOrUpdate mutation called from frontend will handle this
-          console.warn('User record not found after auth, userId:', userId)
+          console.warn('User record not found in createOrUpdateUser callback, userId:', userId)
         }
+        
+        return userId
       } catch (error) {
-        // Log error but don't throw - auth should still succeed
-        console.error('Error in afterAuth callback:', error)
+        // Log error but rethrow - we need to return a userId
+        console.error('Error in createOrUpdateUser callback:', error)
+        throw error
       }
     },
   },
