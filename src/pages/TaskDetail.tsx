@@ -15,7 +15,6 @@ import {
   Circle,
   Sparkles,
   Loader2,
-  Plus,
   ListTree,
 } from 'lucide-react'
 import { TaskCard } from '../components/TaskCard'
@@ -148,8 +147,6 @@ export function TaskDetail() {
   }
 
   const isCompleted = task.status === 'completed'
-  const project = projects?.find((p) => p._id === task.projectId)
-  const category = categories?.find((c) => c._id === task.categoryId)
 
   return (
     <div className="max-w-2xl">

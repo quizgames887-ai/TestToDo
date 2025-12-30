@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { Id } from '../../convex/_generated/dataModel'
-import { Filter, X, ChevronDown } from 'lucide-react'
+import { Filter, ChevronDown } from 'lucide-react'
 
 interface FilterBarProps {
   filters: {

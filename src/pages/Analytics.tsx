@@ -17,21 +17,12 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
   LineChart,
   Line,
   Legend,
 } from 'recharts'
 import { AISummary, AIInsights } from '../components/AISummary'
 import { format } from 'date-fns'
-
-const PRIORITY_COLORS = {
-  low: '#22c55e',
-  medium: '#eab308',
-  high: '#ef4444',
-}
 
 export function Analytics() {
   const completionRate = useQuery(api.analytics.getCompletionRate, { days: 30 })

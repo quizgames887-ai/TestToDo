@@ -1,6 +1,5 @@
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
-import { TaskCard } from '../components/TaskCard'
 import { TaskSection } from '../components/TaskSection'
 import { Calendar, AlertCircle, Clock, CheckCircle2 } from 'lucide-react'
 

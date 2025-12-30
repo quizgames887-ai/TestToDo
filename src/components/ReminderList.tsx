@@ -2,7 +2,7 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { Id } from '../../convex/_generated/dataModel'
 import { Bell, Trash2, Check, Clock } from 'lucide-react'
-import { format, formatDistanceToNow, isPast } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 
 export function ReminderList() {
   const upcomingReminders = useQuery(api.reminders.listUpcoming, { limit: 5 })

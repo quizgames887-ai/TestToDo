@@ -1,7 +1,6 @@
 import { action, mutation, query } from './_generated/server'
 import { v } from 'convex/values'
 import { getAuthUserId } from '@convex-dev/auth/server'
-import { api } from './_generated/api'
 
 // Suggest task priority based on content and due date
 export const suggestPriority = mutation({
@@ -120,7 +119,7 @@ export const breakdownSubtasks = action({
     title: v.string(),
     description: v.optional(v.string()),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     // In production, this would call OpenAI API
     // For now, use heuristic-based breakdown
 
@@ -187,7 +186,7 @@ export const generateProductivitySummary = action({
   args: {
     period: v.union(v.literal('daily'), v.literal('weekly'), v.literal('monthly')),
   },
-  handler: async (ctx, args) => {
+  handler: async (_ctx, args) => {
     // This would typically aggregate task data and call OpenAI for insights
     // For now, return a template response
 

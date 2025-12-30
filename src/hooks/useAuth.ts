@@ -1,6 +1,6 @@
 import { useConvexAuth } from 'convex/react'
 import { useAuthActions } from '@convex-dev/auth/react'
-import { useMutation, useQuery } from 'convex/react'
+import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import { Id } from '../../convex/_generated/dataModel'
 
@@ -20,7 +20,7 @@ export function useAuth() {
 
   const signUpWithPassword = async (email: string, password: string, name?: string) => {
     try {
-      await signIn('password', { email, password, name, flow: 'signUp' })
+      await signIn('password', { email, password, ...(name ? { name } : {}), flow: 'signUp' })
       return { success: true }
     } catch (error) {
       return { success: false, error: error instanceof Error ? error.message : 'Sign up failed' }
