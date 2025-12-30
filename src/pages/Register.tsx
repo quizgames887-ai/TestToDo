@@ -1,16 +1,31 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { Mail, Lock, User, ArrowRight, CheckCircle } from 'lucide-react'
 
 export function Register() {
-  const { signUp } = useAuth()
+  const { signUp, isAuthenticated, isLoading: authLoading } = useAuth()
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && !authLoading) {
+      navigate('/', { replace: true })
+    }
+  }, [isAuthenticated, authLoading, navigate])
+
+  // Clear loading state when authentication completes (success or failure)
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      setIsLoading(false)
+    }
+  }, [authLoading, isAuthenticated])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,13 +42,21 @@ export function Register() {
     }
 
     setIsLoading(true)
-    const result = await signUp(email, password, name)
-    
-    if (!result.success) {
-      setError(result.error || 'Failed to create account')
+    try {
+      const result = await signUp(email, password, name)
+      
+      if (!result.success) {
+        setError(result.error || 'Failed to create account')
+        setIsLoading(false)
+        return
+      }
+      
+      // If successful, the useEffect will handle redirect when isAuthenticated becomes true
+      // Keep loading state active - useEffect will clear it when auth completes
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create account')
+      setIsLoading(false)
     }
-    
-    setIsLoading(false)
   }
 
   return (

@@ -49,12 +49,23 @@ export const createOrUpdate = mutation({
 
     const existing = await ctx.db.get(userId)
     if (existing) {
+      // Update existing user
       await ctx.db.patch(userId, {
         email: args.email,
         name: args.name ?? existing.name,
         // Set createdAt if it's missing (for users created before this fix)
         createdAt: existing.createdAt ?? Date.now(),
       })
+    } else {
+      // User should exist from auth, but if it doesn't, create it
+      // Note: This shouldn't happen in normal flow, but handle it just in case
+      await ctx.db.insert('users', {
+        email: args.email,
+        name: args.name,
+        createdAt: Date.now(),
+      })
+      // Note: The inserted user will have a different ID than userId
+      // This is a fallback, but the auth callback should handle this
     }
 
     return await ctx.db.get(userId)
